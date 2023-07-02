@@ -10,7 +10,6 @@
     body {
       background-color: black;
     }
-
     .container {
       font-family: arial;
       font-size: 24px;
@@ -28,9 +27,8 @@
       position: absolute;
       top: 30%;
       left: 35%;
-      padding: 25px;
+      margin: -25px 0 0 -25px;
       text-align: center;
-      color: white;
     }
   </style>
 </head>
@@ -38,18 +36,19 @@
 <body>
   <div class="container">
     <div class="child">
-      <h1>야광귀의 집으로 가는 길</h1>
-      <h2>들어오지 마시오</h2>
+        <h1>야광귀의 집으로 가는 길</h1>
+        <h2>들어오지 마시오</h2>
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
-  </script>
+  <script
+  src="https://code.jquery.com/jquery-3.7.0.min.js"
+  integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+  crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
   <script>
+
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
@@ -57,20 +56,10 @@
       cluster: 'ap3'
     });
 
-    function reset() {
-      location.reload();
-    }
-
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
-    channel.bind('activate', function (data) {
-      var position = "three_kingdoms";
-      
-      if (data["action_type"] == "reset") {
-        reset();
-        return true;
-      }
-
-      if (data["position"] == position) {
+    channel.bind('activate', function(data) {
+      var position = "stone_age"
+      if(data["position"] == position) {
         $.ajax({
           method: "GET",
           url: "localhost:8080/activate",
