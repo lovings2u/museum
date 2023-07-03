@@ -57,11 +57,20 @@
 
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
     channel.bind('activate', function(data) {
-      var position = "stone_age"
-      if(data["position"] == position) {
+      var location = "stone_age"
+      if(data["event_type"] === "reset") {
+        console.log("reset")
         $.ajax({
           method: "GET",
-          url: "localhost:8080/activate",
+          url: "http://localhost:8080/reset"
+        })
+      }
+      
+      if(data["location"] === location) {
+        console.log("activate")
+        $.ajax({
+          method: "GET",
+          url: "http://localhost:8080/activate",
           data: data
         })
       }
