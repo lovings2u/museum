@@ -64,6 +64,7 @@
         console.log("activate")
         $.ajax({
           method: "GET",
+          dataType: "jsonp",
           url: "http://localhost:8080/activate",
           data: data
         })
