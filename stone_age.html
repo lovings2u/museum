@@ -69,8 +69,11 @@
       }
 
       if (data["location"] === location && data["event_type"] === "video") {
-        $('#video').show();
-        $('#video').play();
+        setTimeout(() => {
+          $('#video').show();
+          $('#video').play();
+        }, 3000)
+        
       }
     });
   </script>
