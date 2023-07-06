@@ -2,74 +2,193 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>삼국홀</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		@font-face {
+			font-family: 'KCCImkwontaek';
+			src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202@1.0/KCCImkwontaek.woff') format('woff');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'MYArirang-Medium';
+			src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/MYArirang-Medium.woff2') format('woff2');
+			font-weight: normal;
+			font-style: normal;
+		}
 
-  <style>
-    body {
-      background-color: black;
-    }
-    .container {
-      font-family: arial;
-      font-size: 24px;
-      width: 100%;
-      height: 960px;
-      /* 설정 */
-      position: relative;
-    }
+		html {
+			box-sizing: border-box;
+		}
 
-    .child {
-      /* width: 100%; */
-      /* height: 100%; */
-      background-color: red;
-      /* 상하좌우 정중앙 정렬하기 */
-      position: absolute;
-      top: 30%;
-      left: 35%;
-      margin: -25px 0 0 -25px;
-      text-align: center;
-    }
-  </style>
+		*,
+		*:before,
+		*:after {
+			box-sizing: inherit;
+		}
+
+		html,
+		body {
+			background-color: #ff0000;
+			width: 100%;
+			height: 100%;
+		}
+
+		ul#countdown {
+			position: relative;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 80%;
+			margin: 0 auto;
+			padding: 15px 0 20px 0;
+			color: #fff;
+			border: 1px solid #fff;
+			border-width: 1px 0;
+			overflow: hidden;
+			font-family: "MYArirang-Medium", "KCCImkwontaek", Arial, sans-serif;
+			font-weight: bold;
+		}
+
+		ul#countdown li {
+			margin: 0 -3px 0 0;
+			padding: 0;
+			display: inline-block;
+			width: 50%;
+			font-size: 400px;
+			/* font-size: 6vw; */
+			text-align: center;
+		}
+
+		ul#countdown li .label {
+			color: #ababab;
+			font-size: 80px;
+			/* font-size: 1.5vw; */
+			text-transform: uppercase;
+		}
+	</style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="child">
-        <h1>괴담소</h1>
-    </div>
-  </div>
+	<ul id="countdown">
+		<li id="minutes">
+			<div class="number">00</div>
+			<div class="label">Minutes</div>
+		</li>
+		<li id="seconds">
+			<div class="number">00</div>
+			<div class="label">Seconds</div>
+		</li>
+	</ul>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"
+		integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+	<script>
+		/* --------------------------
+		 * GLOBAL VARS
+		 * -------------------------- */
+		// The date you want to count down to
+		var tmp = new Date();
+		var targetDate = new Date().setSeconds(new Date().getSeconds() + 5);
 
-  <script
-  src="https://code.jquery.com/jquery-3.7.0.min.js"
-  integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-  <script>
 
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+		// Other date related variables
+		var days;
+		var hrs;
+		var min;
+		var sec;
 
-    var pusher = new Pusher('f6a96219d60cd90e5c2d', {
-      cluster: 'ap3'
-    });
+		/* --------------------------
+		 * ON DOCUMENT LOAD
+		 * -------------------------- */
+		$(function () {
+			// Calculate time until launch date
+			timeToLaunch();
+			// Transition the current countdown from 0 
+			numberTransition('#days .number', days, 1000, 'easeOutQuad');
+			numberTransition('#hours .number', hrs, 1000, 'easeOutQuad');
+			numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
+			numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
+			// Begin Countdown
+			setTimeout(countDownTimer, 1001);
+		});
 
-    var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
-    channel.bind('activate', function(data) {
-      var location = "stone_age"
-      
-      if(data["location"] === location) {
-        console.log("activate")
-        $.ajax({
-          method: "GET",
-          dataType: "jsonp",
-          url: "http://localhost:8080/activate",
-          data: data
-        })
-      }
-    });
-  </script>
+		/* --------------------------
+		 * FIGURE OUT THE AMOUNT OF 
+		   TIME LEFT BEFORE LAUNCH
+		 * -------------------------- */
+		function timeToLaunch() {
+			// Get the current date
+			var currentDate = new Date();
+
+			// Find the difference between dates
+			var diff = (currentDate - targetDate) / 1000;
+			var diff = Math.abs(Math.floor(diff));
+
+			// Check number of days until target
+			days = Math.floor(diff / (24 * 60 * 60));
+			sec = diff - days * 24 * 60 * 60;
+
+			// Check number of hours until target
+			hrs = Math.floor(sec / (60 * 60));
+			sec = sec - hrs * 60 * 60;
+
+			// Check number of minutes until target
+			min = Math.floor(sec / (60));
+			sec = sec - min * 60;
+		}
+
+		/* --------------------------
+		 * DISPLAY THE CURRENT 
+		   COUNT TO LAUNCH
+		 * -------------------------- */
+		function countDownTimer() {
+
+			// Figure out the time to launch
+			timeToLaunch();
+
+			// Write to countdown component
+			$("#days .number").text(days);
+			$("#hours .number").text(hrs);
+			$("#minutes .number").text(min);
+			$("#seconds .number").text(sec);
+
+			if (min === 0 && sec === 0) {
+				console.log("done");
+				$.ajax({
+					method: "GET",
+					url: "/activate?event_type=relay&number=14,15&value=off"
+				})
+				return clearTimeout;
+			}
+
+			// Repeat the check every second
+			setTimeout(countDownTimer, 1000);
+		}
+
+		/* --------------------------
+		 * TRANSITION NUMBERS FROM 0
+		   TO CURRENT TIME UNTIL LAUNCH
+		 * -------------------------- */
+		function numberTransition(id, endPoint, transitionDuration, transitionEase) {
+			// Transition numbers from 0 to the final number
+			$({
+				numberCount: $(id).text()
+			}).animate({
+				numberCount: endPoint
+			}, {
+				duration: transitionDuration,
+				easing: transitionEase,
+				step: function () {
+					$(id).text(Math.floor(this.numberCount));
+				},
+				complete: function () {
+					$(id).text(this.numberCount);
+				}
+			});
+		};
+	</script>
 </body>
 
 </html>
