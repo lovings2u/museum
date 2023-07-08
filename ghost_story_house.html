@@ -12,6 +12,7 @@
 			font-weight: normal;
 			font-style: normal;
 		}
+
 		@font-face {
 			font-family: 'MYArirang-Medium';
 			src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/MYArirang-Medium.woff2') format('woff2');
@@ -84,35 +85,71 @@
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"
 		integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+	<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 	<script>
 		/* --------------------------
 		 * GLOBAL VARS
 		 * -------------------------- */
 		// The date you want to count down to
 		var tmp = new Date();
-		var targetDate = new Date().setSeconds(new Date().getSeconds() + 5);
-
-
-		// Other date related variables
+		// var targetDate = new Date().setSeconds(new Date().getSeconds() + 5);
+		var targetDate = new Date().setSeconds(new Date().getSeconds() + 284);
 		var days;
 		var hrs;
 		var min;
 		var sec;
 
+		Pusher.logToConsole = true;
+
+		var pusher = new Pusher('f6a96219d60cd90e5c2d', {
+			cluster: 'ap3'
+		});
+
+		var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
+		channel.bind('activate', function (data) {
+			var location = "ghost_story_house"
+			if (data["event_type"] === "setup") {
+				tmp = new Date();
+				targetDate = new Date().setSeconds(new Date().getSeconds() + 5);
+				// Calculate time until launch date
+				timeToLaunch();
+				// Transition the current countdown from 0 
+				numberTransition('#days .number', days, 1000, 'easeOutQuad');
+				numberTransition('#hours .number', hrs, 1000, 'easeOutQuad');
+				numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
+				numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
+				// Begin Countdown
+				setTimeout(countDownTimer, 1001);
+			}
+
+			// if (data["location"] === location) {
+			//   console.log("activate")
+			//   $.ajax({
+			//     method: "GET",
+			//     dataType: "jsonp",
+			//     url: "http://localhost:8080/activate",
+			//     data: data
+			//   })
+			// }
+		});
+
+		// Other date related variables
+
+
 		/* --------------------------
 		 * ON DOCUMENT LOAD
 		 * -------------------------- */
-		$(function () {
-			// Calculate time until launch date
-			timeToLaunch();
-			// Transition the current countdown from 0 
-			numberTransition('#days .number', days, 1000, 'easeOutQuad');
-			numberTransition('#hours .number', hrs, 1000, 'easeOutQuad');
-			numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
-			numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
-			// Begin Countdown
-			setTimeout(countDownTimer, 1001);
-		});
+		// $(function () {
+		// 	// Calculate time until launch date
+		// 	timeToLaunch();
+		// 	// Transition the current countdown from 0 
+		// 	numberTransition('#days .number', days, 1000, 'easeOutQuad');
+		// 	numberTransition('#hours .number', hrs, 1000, 'easeOutQuad');
+		// 	numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
+		// 	numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
+		// 	// Begin Countdown
+		// 	setTimeout(countDownTimer, 1001);
+		// });
 
 		/* --------------------------
 		 * FIGURE OUT THE AMOUNT OF 
@@ -153,15 +190,6 @@
 			$("#hours .number").text(hrs);
 			$("#minutes .number").text(min);
 			$("#seconds .number").text(sec);
-
-			if (min === 0 && sec === 0) {
-				console.log("done");
-				$.ajax({
-					method: "GET",
-					url: "/activate?event_type=relay&number=14,15&value=off"
-				})
-				return clearTimeout;
-			}
 
 			// Repeat the check every second
 			setTimeout(countDownTimer, 1000);

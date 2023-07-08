@@ -58,7 +58,8 @@
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
     channel.bind('activate', function(data) {
       var location = "three_kingdoms"
-      if(data["event_type"] === "reset") {
+
+      if(data["location"] === location && data["event_type"] === "activate") {
         console.log("reset")
         $.ajax({
           method: "GET",

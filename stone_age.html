@@ -49,6 +49,7 @@
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
     channel.bind('activate', function (data) {
       var location = "stone_age"
+
       if (data["event_type"] === "reset") {
         console.log("reset")
         $('#video').hide();
@@ -58,7 +59,7 @@
         })
       }
 
-      if (data["location"] === location) {
+      if (data["location"] === location && data["event_type"] === "activate") {
         console.log("activate")
         $.ajax({
           method: "GET",
