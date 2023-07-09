@@ -59,10 +59,11 @@
     channel.bind('activate', function(data) {
       var location = "three_kingdoms"
 
-      if(data["location"] === location) {
+      if (data["event_type"] === "reset") {
         console.log("reset")
         $.ajax({
           method: "GET",
+          dataType: "jsonp",
           url: "http://localhost:8080/reset"
         })
       }
