@@ -108,7 +108,7 @@
 		var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
 		channel.bind('activate', function (data) {
 			var location = "ghost_story_house"
-			if (data["event_type"] === "setup") {
+			if (data["event_type"] === location && data["event_type"] === "setup") {
 				tmp = new Date();
 				targetDate = new Date().setSeconds(new Date().getSeconds() + 285);
 				// Calculate time until launch date
