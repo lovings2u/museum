@@ -66,7 +66,7 @@
         })
       }
       
-      if(data["location"] === location && data["event_type"] === "activate") {
+      if(data["location"] === location) {
         console.log("activate")
         $.ajax({
           method: "GET",
