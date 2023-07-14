@@ -7,47 +7,83 @@
   <title>삼국홀</title>
 
   <style>
+    @font-face {
+      font-family: 'KCCImkwontaek';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202@1.0/KCCImkwontaek.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'MYArirang-Medium';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/MYArirang-Medium.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     body {
       background-color: black;
+      color: white;
+      font-family: 'MYArirang-Medium', 'KCCImkwontaek';
     }
-    .container {
-      font-family: arial;
-      font-size: 24px;
+
+    .pin {
+      font-size: 12rem;
+      margin-top: 400px;
+    }
+
+    .outer {
       width: 100%;
-      height: 960px;
-      /* 설정 */
+      height: 100%;
+
       position: relative;
     }
 
-    .child {
-      /* width: 100%; */
-      /* height: 100%; */
-      background-color: red;
-      /* 상하좌우 정중앙 정렬하기 */
+    .inner {
+      width: 800px;
+      height: 100px;
+      word-break: keep-all;
       position: absolute;
-      top: 30%;
-      left: 35%;
-      margin: -25px 0 0 -25px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       text-align: center;
+    }
+
+    #video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -100;
+      background: url(polina.jpg) no-repeat;
+      background-size: cover;
+      display: none;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="child">
-        <h1>입장 안내</h1>
+  <div class="outer">
+    <div class="inner">
+      <p class="pin">시작코드<br /> 0721</p>
     </div>
   </div>
 
-  <script
-  src="https://code.jquery.com/jquery-3.7.0.min.js"
-  integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  <video id="video">
+    <source src="./start.mp4" type="video/mp4">
+  </video>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
+  </script>
   <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
   <script>
-
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
@@ -56,24 +92,20 @@
     });
 
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
-    channel.bind('activate', function(data) {
-      var location = "stone_age"
-      if(data["event_type"] === "reset") {
-        console.log("reset")
-        $.ajax({
-          method: "GET",
-          url: "http://localhost:8080/reset"
-        })
-      }
-      
-      if(data["location"] === location) {
-        console.log("activate")
-        $.ajax({
-          method: "GET",
-          dataType: "jsonp",
-          url: "http://localhost:8080/activate",
-          data: data
-        })
+    channel.bind('activate', function (data) {
+      var location = "information"
+
+      if (data["location"] === location && data["event_type"] === "video") {
+        $('.pin').hide();
+        $('#video').show();
+        $('#video').get(0).play();
+        setTimeout(() => {
+          $('#video').hide();
+          $('#video').get(0).pause();
+        }, 11 * 1000);
+        setTimeout(() => {
+          $('.pin').show();
+        }, 20 * 1000);
       }
     });
   </script>

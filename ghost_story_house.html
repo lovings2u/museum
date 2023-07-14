@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	
 	<style>
 		@font-face {
 			font-family: 'KCCImkwontaek';
@@ -92,12 +93,13 @@
 		 * -------------------------- */
 		// The date you want to count down to
 		var tmp = new Date();
-		// var targetDate = new Date().setSeconds(new Date().getSeconds() + 5);
-		var targetDate = new Date().setSeconds(new Date().getSeconds() + 284);
+		var targetDate = new Date().setSeconds(new Date().getSeconds() + 5);
+		// var targetDate = new Date().setSeconds(new Date().getSeconds() + 284);
 		var days;
 		var hrs;
 		var min;
 		var sec;
+		var timeout_id
 
 		Pusher.logToConsole = true;
 
@@ -119,11 +121,12 @@
 				numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
 				numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
 				// Begin Countdown
-				setTimeout(countDownTimer, 1001);
+				timeout_id = setTimeout(countDownTimer, 1001);
 			}
 
 			if (data["location"] === "ending" && data["event_type"] === "setup") {
-			  clearTimeout();
+				console.log("over");
+			  clearTimeout(timeout_id);
 			}
 		});
 
@@ -133,17 +136,17 @@
 		/* --------------------------
 		 * ON DOCUMENT LOAD
 		 * -------------------------- */
-		// $(function () {
-		// 	// Calculate time until launch date
-		// 	timeToLaunch();
-		// 	// Transition the current countdown from 0 
-		// 	numberTransition('#days .number', days, 1000, 'easeOutQuad');
-		// 	numberTransition('#hours .number', hrs, 1000, 'easeOutQuad');
-		// 	numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
-		// 	numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
-		// 	// Begin Countdown
-		// 	setTimeout(countDownTimer, 1001);
-		// });
+		$(function () {
+			// Calculate time until launch date
+			timeToLaunch();
+			// Transition the current countdown from 0 
+			numberTransition('#days .number', days, 1000, 'easeOutQuad');
+			numberTransition('#hours .number', hrs, 1000, 'easeOutQuad');
+			numberTransition('#minutes .number', min, 1000, 'easeOutQuad');
+			numberTransition('#seconds .number', sec, 1000, 'easeOutQuad');
+			// Begin Countdown
+			setTimeout(countDownTimer, 1001);
+		});
 
 		/* --------------------------
 		 * FIGURE OUT THE AMOUNT OF 
@@ -185,12 +188,15 @@
 			$("#minutes .number").text(min);
 			$("#seconds .number").text(sec);
 
-			// Repeat the check every second
-			setTimeout(countDownTimer, 1000);
 			if(min <= 0 && sec <= 0) {
 				clearTimeout();
-				console.log("done");
+				console.log("count over");
+				return false;
 			}
+
+			// Repeat the check every second
+			timeout_id = setTimeout(countDownTimer, 1000);
+			
 		}
 
 		/* --------------------------
