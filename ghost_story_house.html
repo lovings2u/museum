@@ -122,15 +122,9 @@
 				setTimeout(countDownTimer, 1001);
 			}
 
-			// if (data["location"] === location) {
-			//   console.log("activate")
-			//   $.ajax({
-			//     method: "GET",
-			//     dataType: "jsonp",
-			//     url: "http://localhost:8080/activate",
-			//     data: data
-			//   })
-			// }
+			if (data["location"] === "ending" && data["event_type"] === "setup") {
+			  clearTimeout();
+			}
 		});
 
 		// Other date related variables
@@ -193,6 +187,10 @@
 
 			// Repeat the check every second
 			setTimeout(countDownTimer, 1000);
+			if(min <= 0 && sec <= 0) {
+				clearTimeout();
+				console.log("done");
+			}
 		}
 
 		/* --------------------------
