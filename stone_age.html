@@ -16,7 +16,6 @@
       /* 인터넷 익스플로러 */
       scrollbar-width: none;
       /* 파이어폭스 */
-      overflow: hidden;
     }
 
     body::-webkit-scrollbar {
@@ -31,10 +30,8 @@
       min-height: 100%;
       width: auto;
       height: auto;
-      z-index: -100;
-      background: url(polina.jpg) no-repeat;
-      background-size: cover;
       display: none;
+      z-index: 100;
     }
   </style>
 </head>
@@ -63,8 +60,7 @@
       var location = "stone_age"
 
       if (data["event_type"] === "reset") {
-        console.log("reset")
-        $('#video').hide();
+        $('#video').hide();l
         $.ajax({
           method: "GET",
           dataType: "jsonp",
