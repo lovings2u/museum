@@ -108,7 +108,8 @@
     });
 
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
-    var video = "success";
+    var video = $('#success').get(0);
+    var result = "success";
     channel.bind('activate', function (data) {
       var location = "ending";
 
@@ -123,12 +124,13 @@
           }
         }
         if (data["event_type"] === "video") {
+          $('#' + result).show();
           $('.pin').hide();
-          video.get(0).play();
+          video.play();
           setTimeout(() => {
             $('.pin').show();
             video.hide();
-            video.get(0).pause();
+            video.pause();
           }, 60 * 1000);
         }
 
