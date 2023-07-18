@@ -1,52 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>롯데월드 민속박물관 IOT SYSTEM</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <style>
     body {
-        background-color: black !important;
-        overflow: hidden;
-        -ms-overflow-style: none; /* IE and Edge */
+      background-color: black !important;
+      overflow: hidden;
+      -ms-overflow-style: none;
+      /* IE and Edge */
     }
 
     body::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera*/
+      display: none;
+      /* Chrome, Safari, Opera*/
     }
-</style>
+  </style>
 </head>
+
 <body>
-  <a href="./information.html"><button class="btn btn-secondary">시작부분</button></a>
-  <a href="./stone_age.html"><button class="btn btn-secondary">석기시대</button></a>
-  <a href="./three_kingdoms.html"><button class="btn btn-secondary">삼국시대</button></a>
-  <a href="./silla.html"><button class="btn btn-secondary">통일신라</button></a>
-  <a href="./ghost_story_house.html"><button class="btn btn-secondary">괴담소</button></a>
-  <a href="./ending.html"><button class="btn btn-secondary">종료</button></a>
-  
-  
-  
-  
-  <script
-  src="https://code.jquery.com/jquery-3.7.0.min.js"
-  integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  <div class="container">
+    <a href="./information.html"><button class="btn btn-secondary information">시작부분</button></a>
+    <a href="./stone_age.html"><button class="btn btn-secondary stone_age">석기시대</button></a>
+    <a href="./three_kingdoms.html"><button class="btn btn-secondary three_kingdoms">삼국시대</button></a>
+    <a href="./silla.html"><button class="btn btn-secondary silla">통일신라</button></a>
+    <a href="./ghost_story_house.html"><button class="btn btn-secondary ghost_story_house">괴담소</button></a>
+    <a href="./ending.html"><button class="btn btn-secondary ending">종료</button></a>
+
+    <h1 class="">동작 로그</h1>
+    <table class="table logs">
+      <thead>
+        <tr>
+          <th scope="col">동작시간</th>
+          <th scope="col">위치</th>
+          <th scope="col">메시지</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
+  </script>
   <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
   <script>
-
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
     var pusher = new Pusher('f6a96219d60cd90e5c2d', {
       cluster: 'ap3'
     });
+    var position = {
+      "information": "안내영상",
+      "stone_age": "석기시대",
+      "three_kingdoms": "삼국홀",
+      "silla": "통일신라",
+      "ghost_story_house": "야광귀의 집",
+      "ending": "엔딩영상"
+    }
+    var action = {
+      "relay": "조명",
+      "sound": "음향",
+      "video": "영상", 
+      "motor": "진동",
+      "change": "변경",
+      "setup": "설정"
+    }
 
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
-    channel.bind('activate', function(data) {
-      alert(JSON.stringify(data));
+    channel.bind('activate', function (data) {
+      console.log(data)
+      if (data["event_type"] !== "reset") {
+        var now = new Date();
+        const hour = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        $('.logs tbody').append(`
+        <tr>
+          <td>${hour}시 ${minutes}분 ${seconds}초</td>
+          <td>${position[data["location"]]}</td>
+          <td>${action[data["event_type"]]}</td>
+        </tr>
+        `)
+      }
     });
   </script>
 </body>
+
 </html>

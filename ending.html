@@ -27,6 +27,19 @@
       font-family: 'MYArirang-Medium', 'KCCImkwontaek';
     }
 
+    html,
+		body {
+			-ms-overflow-style: none;
+			/* 인터넷 익스플로러 */
+			scrollbar-width: none;
+			/* 파이어폭스 */
+			overflow: hidden;
+		}
+
+		body::-webkit-scrollbar {
+			display: none;
+		}
+
     .pin {
       font-size: 8rem;
       margin-top: 400px;
@@ -96,26 +109,27 @@
     });
 
     var channel = pusher.subscribe('7jvvCibzs7aAXqzBseDY');
+    var video;
     channel.bind('activate', function (data) {
       var location = "ending";
 
-      if (data["location"] === location && data["event_type"] === "setup") {
-        $('.pin').hide();
-        if (data["value"] === "success") {
-          $('#success').show();
-          $('#success').get(0).play();
+      if (data["location"] === location) {
+        if (data["event_type"] === "setup") {
+          if (data["value"] === "success") {
+            $('#success').show();
+            video = $('#success').get(0);
+          } else if (data["value"] === "fail") {
+            $('#fail').show();
+            video = $('#fail').get(0);
+          }
+        }
+        if (data["event_type"] === "video") {
+          $('.pin').hide();
+          video.get(0).play();
           setTimeout(() => {
             $('.pin').show();
-            $('#success').hide();
-            $('#success').get(0).pause();
-          }, 60 * 1000);
-        } else if (data["value"] === "fail") {
-          $('#fail').show();
-          $('#fail').get(0).play();
-          setTimeout(() => {
-            $('.pin').show();
-            $('#fail').hide();
-            $('#fail').get(0).pause();
+            video.hide();
+            video.get(0).pause();
           }, 60 * 1000);
         }
 

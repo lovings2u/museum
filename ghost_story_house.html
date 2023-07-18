@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	
+
 	<style>
 		@font-face {
 			font-family: 'KCCImkwontaek';
@@ -36,7 +36,17 @@
 			background-color: #ff0000;
 			width: 100%;
 			height: 100%;
+			-ms-overflow-style: none;
+			/* 인터넷 익스플로러 */
+			scrollbar-width: none;
+			/* 파이어폭스 */
+			overflow: hidden;
 		}
+
+		body::-webkit-scrollbar {
+			display: none;
+		}
+
 
 		ul#countdown {
 			position: relative;
@@ -126,7 +136,7 @@
 
 			if (data["location"] === "ending" && data["event_type"] === "setup") {
 				console.log("over");
-			  clearTimeout(timeout_id);
+				clearTimeout(timeout_id);
 			}
 		});
 
@@ -188,7 +198,7 @@
 			$("#minutes .number").text(min);
 			$("#seconds .number").text(sec);
 
-			if(min <= 0 && sec <= 0) {
+			if (min <= 0 && sec <= 0) {
 				clearTimeout();
 				console.log("count over");
 				return false;
@@ -196,7 +206,7 @@
 
 			// Repeat the check every second
 			timeout_id = setTimeout(countDownTimer, 1000);
-			
+
 		}
 
 		/* --------------------------
