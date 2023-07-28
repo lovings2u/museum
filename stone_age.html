@@ -60,7 +60,8 @@
       var location = "stone_age"
 
       if (data["event_type"] === "reset") {
-        $('#video').hide();l
+        $('#video').hide();
+        $('#video').currentTime = 0;
         $.ajax({
           method: "GET",
           dataType: "jsonp",
